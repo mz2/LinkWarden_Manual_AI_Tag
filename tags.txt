@@ -1,50 +1,14 @@
-# Technology
-programming
-python
-javascript
-docker
-kubernetes
+# All tags extracted from LinkWarden
+# Edit this file to keep only the tags you want to allow
+
+AI agent
+Finland
+Helsinki
+cafe
+chicken
+lentil
 linux
-devops
-cloud
-aws
-database
-
-# Development
-frontend
-backend
-web
-api
-security
-testing
-git
-
-# Business
-startup
-marketing
-productivity
-finance
-management
-
-# Education
-tutorial
-course
-documentation
-learning
-guide
-
-# Media
-video
-audio
-podcast
-music
-books
-
-# Personal
-health
-fitness
-cooking
-travel
-photography
-
-
+mushroom
+pasta
+sweet
+vlm
