@@ -123,25 +123,35 @@ Suggested Tags:"""
             return []
 
     def get_all_links(self) -> List[Dict]:
-        """Fetch all links using pagination."""
+        """Fetch all links using cursor-based pagination."""
         try:
             all_links = []
-            skip = 0
+            cursor = None
             page = 1
 
             while True:
-                logger.info(f"Fetching page {page} of links (skip={skip})...")
-                response = requests.get(f'{self.base_url}/links?skip={skip}', headers=self.headers)
+                # Build URL with cursor parameter
+                if cursor is None:
+                    url = f'{self.base_url}/links'
+                    logger.info(f"Fetching page {page} of links (initial request)...")
+                else:
+                    url = f'{self.base_url}/links?cursor={cursor}'
+                    logger.info(f"Fetching page {page} of links (cursor={cursor})...")
+
+                response = requests.get(url, headers=self.headers)
                 response.raise_for_status()
                 data = response.json()
                 links = data.get('response', [])
 
                 if not links:
+                    logger.info("No more links returned - reached end of data")
                     break
 
-                logger.debug(f"Page {page}: Retrieved {len(links)} links")
+                logger.debug(f"Page {page}: Retrieved {len(links)} links (IDs: {links[0].get('id')} to {links[-1].get('id')})")
                 all_links.extend(links)
-                skip += len(links)
+
+                # Set cursor to the ID of the last link for the next request
+                cursor = links[-1].get('id')
                 page += 1
 
                 # Safety limit to prevent infinite loops
@@ -150,7 +160,7 @@ Suggested Tags:"""
                     break
 
             # Log details about all the links
-            logger.info(f"Total links retrieved across all pages: {len(all_links)}")
+            logger.info(f"Total links retrieved across {page-1} pages: {len(all_links)}")
             for link in all_links:
                 logger.debug(f"Link details - Name: {link.get('name')}, URL: {link.get('url')}")
 
